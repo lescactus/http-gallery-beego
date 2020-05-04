@@ -1,0 +1,63 @@
+package controllers
+
+import (
+	"net/http"
+	"os"
+
+	"github.com/astaxie/beego"
+)
+
+type FileTypeController struct {
+	beego.Controller
+}
+
+func (c *FileTypeController) Post() {
+	//c.TplName = "upload.tpl"
+	contentType := "unknown"
+
+	file, header, err := c.GetFile("file")
+	if err != nil {
+		beego.Error(err.Error())
+		return
+	}
+	if file != nil {
+		fileName := header.Filename
+		beego.Info("Saving filename: " + fileName)
+		if err := c.SaveToFile("file", "./uploads/"+fileName); err != nil {
+			beego.Error(err.Error())
+			return
+		}
+		beego.Info("Saved.")
+		// Open File
+		f, err := os.Open("./uploads/" + fileName)
+		if err != nil {
+			panic(err)
+		}
+		defer f.Close()
+
+		// Get the content
+		contentType, err = GetFileContentType(f)
+		if err != nil {
+			panic(err)
+		}
+
+	}
+	c.Ctx.Output.Body([]byte(contentType))
+}
+
+func GetFileContentType(out *os.File) (string, error) {
+
+	// Only the first 512 bytes are used to sniff the content type.
+	buffer := make([]byte, 512)
+
+	_, err := out.Read(buffer)
+	if err != nil {
+		return "", err
+	}
+
+	// Use the net/http package's handy DectectContentType function. Always returns a valid
+	// content-type by returning "application/octet-stream" if no others seemed to match.
+	contentType := http.DetectContentType(buffer)
+
+	return contentType, nil
+}
