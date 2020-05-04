@@ -54,13 +54,17 @@ func isContentTypeAllowed(contentType string) bool {
 }
 
 func (c *MainController) Get() {
+	beego.ReadFromRequest(&c.Controller)
+
 	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
 	c.Data["htmlInputName"] = htmlInputName
 	c.TplName = "upload.tpl"
 }
 
 func (c *MainController) Post() {
-	// Get
+	flash := beego.NewFlash()
+
+	// Get file from HTML form
 	file, header, err := c.GetFile("file")
 	if err != nil {
 		logs.Error(err.Error())
@@ -74,13 +78,19 @@ func (c *MainController) Post() {
 	contentType, err := getFileContentType(file)
 	if err != nil {
 		logs.Error(c.Ctx.Input.GetData("requestid"), "Can't get "+fileName+"Content-Type")
+		flash.Error("Error while getting content type of " + fileName)
+		flash.Store(&c.Controller)
+		c.Redirect("/", 302)
+		return
 	}
 	logs.Info(c.Ctx.Input.GetData("requestid"), "New file Content-Type: "+contentType)
 
 	// The file sent isn't allowed to be uploaded
 	if !isContentTypeAllowed(contentType) {
 		logs.Error(c.Ctx.Input.GetData("requestid"), "Content-Type of "+fileName+" isn't allowed")
-		c.Ctx.Output.Body([]byte("Content-Type of " + fileName + " isn't allowed"))
+		flash.Error("Error: File type of " + fileName + " is not allowed")
+		flash.Store(&c.Controller)
+		c.Redirect("/", 302)
 		return
 	}
 	logs.Info(c.Ctx.Input.GetData("requestid"), "New file Content-Type belongs to the allowed Content-Type")
@@ -88,11 +98,16 @@ func (c *MainController) Post() {
 	// Save file in the local filesystem
 	if err := c.SaveToFile("file", uploadDirectory+fileName); err != nil {
 		logs.Error(c.Ctx.Input.GetData("requestid"), err.Error())
+		flash.Error("Error while saving " + uploadDirectory + fileName + " on the local filesystem")
+		flash.Store(&c.Controller)
+		c.Redirect("/", 302)
 		return
 
 	}
 	logs.Info(c.Ctx.Input.GetData("requestid"), "New file saved successfully: "+fileName)
+	flash.Success("File successfully uploaded")
 
+	flash.Store(&c.Controller)
 	c.Redirect("/", 301)
 	return
 	//c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())

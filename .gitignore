@@ -1,1 +1,2 @@
-./http-gallery-beego # output binary
+./http-gallery-beego* # output binary
+uploads/*
