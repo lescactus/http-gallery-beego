@@ -12,8 +12,8 @@ import (
 )
 
 var (
-	uploadDirectory     = "./uploads/"
-	thumbnailsDirectory = "./thumbnails/"
+	uploadDirectory     = "uploads/"
+	thumbnailsDirectory = "thumbnails/"
 )
 
 func createDirectoryIfNotPresent(dirPath string) {
@@ -30,6 +30,8 @@ func init() {
 	createDirectoryIfNotPresent(uploadDirectory)
 	createDirectoryIfNotPresent(thumbnailsDirectory)
 
+	beego.SetStaticPath(uploadDirectory, uploadDirectory)
+	beego.SetStaticPath(thumbnailsDirectory, thumbnailsDirectory)
 	beego.SetStaticPath("static/css", "static/css")
 	beego.SetStaticPath("static/img", "static/img")
 	beego.SetStaticPath("static/js", "static/js")

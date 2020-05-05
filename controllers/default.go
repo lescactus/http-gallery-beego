@@ -2,8 +2,10 @@ package controllers
 
 import (
 	"html/template"
+	"io/ioutil"
 	"mime/multipart"
 	"net/http"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -17,10 +19,10 @@ var (
 	allowedContentTypes = []string{"image/jpeg", "image/jpg", "application/jpeg", "application/jpg", "image/png", "image/ief"}
 
 	// Upload directory
-	uploadDirectory = "./uploads/"
+	uploadDirectory = "uploads/"
 
 	// THumbnails directiry
-	thumbnailDirectory = "./thumbnails/"
+	thumbnailDirectory = "thumbnails/"
 
 	// Name of the type="file" html input
 	htmlInputName = "file"
@@ -59,14 +61,50 @@ func isContentTypeAllowed(contentType string) bool {
 	return false
 }
 
+// Return true if file is a real file and false if it is a directory
+func isAFile(file string) bool {
+	i, err := os.Stat(file)
+	if os.IsNotExist(err) {
+		return false
+	}
+
+	return !i.IsDir()
+}
+
+// Generate the thumbnail name from the original image
+// by appending '-thumb' before the extension name
+// Ex: test.jpg => test-thumb.jpg
+func generateThumbnailName(orig string) string {
+	return strings.Trim(orig, filepath.Ext(orig)) + "-thumb" + filepath.Ext(orig)
+}
+
+// Get handle GET requests
 func (c *MainController) Get() {
 	beego.ReadFromRequest(&c.Controller)
 
+	// Get all saved images and thumbnails
+	images := map[string]string{}
+	files, err := ioutil.ReadDir(uploadDirectory)
+	if err != nil {
+		logs.Critical("Error: " + err.Error())
+	}
+	for _, file := range files {
+		if isAFile(uploadDirectory + file.Name()) {
+			images[file.Name()] = generateThumbnailName(file.Name())
+		}
+	}
+
+	c.Data["uploadDirectory"] = uploadDirectory
+	c.Data["thumbnailDirectory"] = thumbnailDirectory
+	c.Data["images"] = images
 	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
 	c.Data["htmlInputName"] = htmlInputName
 	c.TplName = "upload.tpl"
 }
 
+// Post handle POST requests (form submittion)
+// Verify that the file submitted is a real image
+// Save and create a thumbnail out of it
 func (c *MainController) Post() {
 	flash := beego.NewFlash()
 
@@ -103,15 +141,14 @@ func (c *MainController) Post() {
 	}
 
 	// Create and save the thumbnail from the uploaded image
-	thumbnailName := strings.Trim(fileName, filepath.Ext(fileName)) + "-thumb" + filepath.Ext(fileName)
-	logs.Debug("Filename: " + fileName + ", Thumbnail: " + thumbnailName)
+	thumbnailName := generateThumbnailName(fileName)
 	thumbnail, err := imaging.Open(uploadDirectory + fileName)
 	if err != nil {
 		errorHandler("Error while creating thumbnail for "+fileName, c, err, flash)
 		return
 	}
 
-	thumbnail = imaging.Resize(thumbnail, 300, 300, imaging.Lanczos)
+	thumbnail = imaging.Fill(thumbnail, 300, 300, imaging.Center, imaging.Box)
 	err = imaging.Save(thumbnail, thumbnailDirectory+thumbnailName)
 	if err != nil {
 		errorHandler("Error while creating thumbnail for "+fileName, c, err, flash)
