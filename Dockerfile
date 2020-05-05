@@ -1,6 +1,6 @@
 FROM library/golang as builder
 
-RUN go get "github.com/astaxie/beego" "github.com/google/uuid"
+RUN go get "github.com/astaxie/beego" "github.com/google/uuid" "github.com/disintegration/imaging"
 
 # Recompile the standard library without CGO
 RUN CGO_ENABLED=0 go install -a std
@@ -23,6 +23,6 @@ COPY --from=builder /go/src/github.com/lescactus/http-gallery-beego/static /app/
 
 EXPOSE 8080
 
-RUN mkdir uploads
+RUN mkdir uploads thumbnails
 
 CMD ["./main"]
