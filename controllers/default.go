@@ -4,9 +4,12 @@ import (
 	"html/template"
 	"mime/multipart"
 	"net/http"
+	"path/filepath"
+	"strings"
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/logs"
+	"github.com/disintegration/imaging"
 )
 
 var (
@@ -15,6 +18,9 @@ var (
 
 	// Upload directory
 	uploadDirectory = "./uploads/"
+
+	// THumbnails directiry
+	thumbnailDirectory = "./thumbnails/"
 
 	// Name of the type="file" html input
 	htmlInputName = "file"
@@ -77,34 +83,42 @@ func (c *MainController) Post() {
 	// Get the Content-Type of the file sent using the html form
 	contentType, err := getFileContentType(file)
 	if err != nil {
-		logs.Error(c.Ctx.Input.GetData("requestid"), "Can't get "+fileName+"Content-Type")
-		flash.Error("Error while getting content type of " + fileName)
-		flash.Store(&c.Controller)
-		c.Redirect("/", 302)
+		errorHandler("Error while getting content type of "+fileName, c, err, flash)
 		return
 	}
 	logs.Info(c.Ctx.Input.GetData("requestid"), "New file Content-Type: "+contentType)
 
 	// The file sent isn't allowed to be uploaded
 	if !isContentTypeAllowed(contentType) {
-		logs.Error(c.Ctx.Input.GetData("requestid"), "Content-Type of "+fileName+" isn't allowed")
-		flash.Error("Error: File type of " + fileName + " is not allowed")
-		flash.Store(&c.Controller)
-		c.Redirect("/", 302)
+		errorHandler("Error: File type of "+fileName+" is not allowed", c, err, flash)
 		return
 	}
 	logs.Info(c.Ctx.Input.GetData("requestid"), "New file Content-Type belongs to the allowed Content-Type")
 
-	// Save file in the local filesystem
+	// Save file in the local filesystem and create a new thumbnail out of it
 	if err := c.SaveToFile("file", uploadDirectory+fileName); err != nil {
-		logs.Error(c.Ctx.Input.GetData("requestid"), err.Error())
-		flash.Error("Error while saving " + uploadDirectory + fileName + " on the local filesystem")
-		flash.Store(&c.Controller)
-		c.Redirect("/", 302)
+		errorHandler("Error while saving "+uploadDirectory+fileName+" on the local filesystem", c, err, flash)
 		return
 
 	}
-	logs.Info(c.Ctx.Input.GetData("requestid"), "New file saved successfully: "+fileName)
+
+	// Create and save the thumbnail from the uploaded image
+	thumbnailName := strings.Trim(fileName, filepath.Ext(fileName)) + "-thumb" + filepath.Ext(fileName)
+	logs.Debug("Filename: " + fileName + ", Thumbnail: " + thumbnailName)
+	thumbnail, err := imaging.Open(uploadDirectory + fileName)
+	if err != nil {
+		errorHandler("Error while creating thumbnail for "+fileName, c, err, flash)
+		return
+	}
+
+	thumbnail = imaging.Resize(thumbnail, 300, 300, imaging.Lanczos)
+	err = imaging.Save(thumbnail, thumbnailDirectory+thumbnailName)
+	if err != nil {
+		errorHandler("Error while creating thumbnail for "+fileName, c, err, flash)
+		return
+	}
+
+	logs.Info(c.Ctx.Input.GetData("requestid"), "New file saved successfully: "+thumbnailName)
 	flash.Success("File successfully uploaded")
 
 	flash.Store(&c.Controller)
@@ -112,4 +126,12 @@ func (c *MainController) Post() {
 	return
 	//c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
 	//c.TplName = "upload.tpl"
+}
+
+func errorHandler(msg string, c *MainController, err error, flash *beego.FlashData) {
+	logs.Error(c.Ctx.Input.GetData("requestid"), err.Error())
+	flash.Error(msg)
+	flash.Store(&c.Controller)
+	c.Redirect("/", 302)
+	return
 }

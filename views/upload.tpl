@@ -11,11 +11,4 @@
         <script src="static/js/fileinput.min.js" ></script>
         <script src="static/js/bootstrap.min.js" ></script>
         <script src="static/js/bootstrap-gallery.js" ></script>
-    <form action="/" method="post" enctype="multipart/form-data">
-        <label for="file">Filename:</label>
-        <input type="file" name="file" id="file">
-        <input type="submit" name="submit" value="Submit">
-        {{ .xsrfdata }}
-    </form>
-    </body>
  </html>
