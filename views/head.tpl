@@ -24,25 +24,6 @@
     {{ else }}
         <link href="/static/css/flatty.min.css" rel="stylesheet" type="text/css" />
     {{ end }}
-
-
-    {{/*
-    {% if theme %}
-        {% if theme == "flatty" %}
-            <link href="/static/css/flatty.min.css" rel="stylesheet" type="text/css" />
-        {% elif theme == "solar" %}
-            <link href="/static/css/solar.min.css" rel="stylesheet" type="text/css" />
-        {% elif theme == "darkly" %}
-            <link href="/static/css/darkly.min.css" rel="stylesheet" type="text/css" />
-        {% elif theme == "superhero" %}
-            <link href="/static/css/superhero.min.css" rel="stylesheet" type="text/css" />
-        {% endif %}
-    {% else %} {# Default theme if no cookie set #}
-        <link href="/static/css/flatty.min.css" rel="stylesheet" type="text/css" />
-    {% endif %}
-    */}}
-
-    
     <link href="/static/css/fileinput.min.css" rel="stylesheet" type="text/css" />
     <link href="/static/css/bootstrap-gallery.css" rel="stylesheet" type="text/css" />
 </head>

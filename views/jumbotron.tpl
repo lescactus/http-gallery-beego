@@ -11,4 +11,9 @@
         <li><a href="https://github.com/ludovicscribe/bootstrap-gallery" >ludovicscribe/bootstrap-gallery</a></li>
         <li><a href="https://github.com/kartik-v/bootstrap-fileinput" >kartik-v/bootstrap-fileinput</a></li>                
     </ul>
+    <div class="container">
+    <p>The source code is available on github</p>
+    <img src="static/img/github.png" alt="Github.com" class="github-logo"/>
+    <b><a href="https://github.com/lescactus/http-gallery-beego">lescactus/http-gallery-beego</a></b>
+    </div>
 </div>

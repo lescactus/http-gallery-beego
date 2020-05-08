@@ -30,3 +30,7 @@ body {
 .bckgnrd-color {
     background-color: inherit !important;
 }
+
+.github-logo {
+    margin-right: 0.5em;
+}
