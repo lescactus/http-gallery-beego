@@ -46,7 +46,6 @@ You can use the following environment variables
 By default, the container will expose port 8080, so change this within the ``Dockerfile`` if necessary. When ready, simply use the ``Dockerfile`` to build the image.
 
 ```sh
-cd app
 docker build -t gallery .
 ```
 This will create the Docker image.
@@ -94,7 +93,7 @@ Screenshots
 
 
 
-[1]: http://gallery.alexasr.tk/
+[1]: https://gallery-beego.alexasr.tk/
 [2]: https://golang.org/
 [3]: https://beego.me/
 [4]: https://getbootstrap.com/
