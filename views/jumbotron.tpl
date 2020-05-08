@@ -4,8 +4,8 @@
     <br/>
     <p>Website powered by <span class="heart">♥</span> and</p>
     <ul>
-        <li><a href="https://www.python.org/" >Python3</a></li>
-        <li><a href="http://flask.pocoo.org/" >Flask v0.12</a></li>
+        <li><a href="https://golang.org/" >Go</a></li>
+        <li><a href="https://beego.me/" >Beego</a></li>
         <li><a href="https://getbootstrap.com/" >Bootstrap3</a></li>
         <li><a href="https://jquery.com/" >JQuery</a></li>
         <li><a href="https://github.com/ludovicscribe/bootstrap-gallery" >ludovicscribe/bootstrap-gallery</a></li>

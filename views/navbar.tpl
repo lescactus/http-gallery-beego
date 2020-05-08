@@ -55,44 +55,6 @@
                         <li><a href="#" id="theme3">Darkly</a></li>
                         <li><a href="#" id="theme4">Superhero</a></li>
                     {{ end }}
-                     {{/* 
-                    {% if theme %}
-                        {% if theme == "flatty" %}
-                            <li><a href="#" id="theme1">Flatty</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li class="dropdown-header">Availables themes</li>
-                            <li><a href="#" id="theme2">Solar</a></li>
-                            <li><a href="#" id="theme3">Darkly</a></li>
-                            <li><a href="#" id="theme4">Superhero</a></li>
-                        {% elif theme == "solar" %}
-                            <li><a href="#" id="theme2">Solar</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li class="dropdown-header">Availables themes</li>
-                            <li><a href="#" id="theme1">Flatty</a></li>
-                            <li><a href="#" id="theme3">Darkly</a></li>
-                            <li><a href="#" id="theme4">Superhero</a></li>
-                        {% elif theme == "darkly" %}
-                            <li><a href="#" id="theme3">Darkly</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li class="dropdown-header">Availables themes</li>
-                            <li><a href="#" id="theme1">Flatty</a></li>
-                            <li><a href="#" id="theme2">Solar</a></li>
-                            <li><a href="#" id="theme4">Superhero</a></li>
-                        {% elif theme == "superhero" %}
-                            <li><a href="#" id="theme4">Superhero</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li class="dropdown-header">Availables themes</li>
-                            <li><a href="#" id="theme1">Flatty</a></li>
-                            <li><a href="#" id="theme2">Solar</a></li>
-                            <li><a href="#" id="theme3">Darkly</a></li>
-                        {% endif %}
-                    {% else %} {# Default if no cookie set #}
-                        <li><a href="#" id="theme1">Flatty</a></li>
-                        <li><a href="#" id="theme2">Solar</a></li>
-                        <li><a href="#" id="theme3">Darkly</a></li>
-                        <li><a href="#" id="theme4">Superhero</a></li>
-                    {% endif %}
-                    */}}
                  </ul>
               </li>
            </ul>
