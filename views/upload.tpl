@@ -13,4 +13,40 @@
         <script src="static/js/fileinput.min.js" ></script>
         <script src="static/js/bootstrap.min.js" ></script>
         <script src="static/js/bootstrap-gallery.js" ></script>
+        <script>
+            // bootstrap-fileinput.js
+            // initialize form (id='image') with defaults
+            $("#image").fileinput();
+        </script>
+        <script>
+            //
+            // Get the clicked theme, and save it in a cookie
+            //
+
+            $("[id^=theme]").click(function(selector, options){
+                var theme = "";
+
+                switch(this.id) {
+                    case "theme1":
+                        theme = "flatty";
+                        break;
+                    case "theme2":
+                        theme = "solar";
+                        break;
+                    case "theme3":
+                        theme = "darkly";
+                        break;
+                    case "theme4":
+                        theme = "superhero";
+                        break;
+
+                    // Should never go here
+                    default:
+                        theme = "flatty";
+                } 
+
+                document.cookie = "theme=" + theme;
+                location.reload();
+            });
+        </script>
  </html>

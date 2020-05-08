@@ -8,6 +8,24 @@
     <link href="/static/css/index.css" rel="stylesheet" type="text/css" />
     <!-- <link href="/static/css/bootstrap.min.css" rel="stylesheet" type="text/css" /> -->
     <!-- <link href="/static/css/flatty.min.css" rel="stylesheet" type="text/css" /> -->
+    {{ if ne .theme "" }}
+        {{ if eq .theme "flatty" }}
+            <link href="/static/css/flatty.min.css" rel="stylesheet" type="text/css" />
+        {{ end }}
+        {{ if eq .theme "solar" }}
+            <link href="/static/css/solar.min.css" rel="stylesheet" type="text/css" />
+        {{ end }}
+        {{ if eq .theme "darkly" }}
+            <link href="/static/css/darkly.min.css" rel="stylesheet" type="text/css" />
+        {{ end }}
+        {{ if eq .theme "superhero" }}
+            <link href="/static/css/superhero.min.css" rel="stylesheet" type="text/css" />
+        {{ end }}
+    {{ else }}
+        <link href="/static/css/flatty.min.css" rel="stylesheet" type="text/css" />
+    {{ end }}
+
+
     {{/*
     {% if theme %}
         {% if theme == "flatty" %}
@@ -23,7 +41,6 @@
         <link href="/static/css/flatty.min.css" rel="stylesheet" type="text/css" />
     {% endif %}
     */}}
-    <link href="/static/css/flatty.min.css" rel="stylesheet" type="text/css" />
 
     
     <link href="/static/css/fileinput.min.css" rel="stylesheet" type="text/css" />

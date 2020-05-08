@@ -16,6 +16,45 @@
               <li class="dropdown">
                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Themes <span class="caret"></span></a>
                  <ul class="dropdown-menu">
+                    {{ if ne .theme "" }}
+                        {{ if eq .theme "flatty" }}
+                            <li><a href="#" id="theme1">Flatty</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li class="dropdown-header">Availables themes</li>
+                            <li><a href="#" id="theme2">Solar</a></li>
+                            <li><a href="#" id="theme3">Darkly</a></li>
+                            <li><a href="#" id="theme4">Superhero</a></li>
+                        {{ end }}
+                        {{ if eq .theme "solar" }}
+                            <li><a href="#" id="theme2">Solar</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li class="dropdown-header">Availables themes</li>
+                            <li><a href="#" id="theme1">Flatty</a></li>
+                            <li><a href="#" id="theme3">Darkly</a></li>
+                            <li><a href="#" id="theme4">Superhero</a></li>
+                        {{ end }}
+                        {{ if eq .theme "darkly" }}
+                            <li><a href="#" id="theme3">Darkly</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li class="dropdown-header">Availables themes</li>
+                            <li><a href="#" id="theme1">Flatty</a></li>
+                            <li><a href="#" id="theme2">Solar</a></li>
+                            <li><a href="#" id="theme4">Superhero</a></li>
+                        {{ end }}
+                        {{ if eq .theme "superhero" }}
+                            <li><a href="#" id="theme4">Superhero</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li class="dropdown-header">Availables themes</li>
+                            <li><a href="#" id="theme1">Flatty</a></li>
+                            <li><a href="#" id="theme2">Solar</a></li>
+                            <li><a href="#" id="theme3">Darkly</a></li>
+                        {{ end }}
+                    {{ else }}
+                        <li><a href="#" id="theme1">Flatty</a></li>
+                        <li><a href="#" id="theme2">Solar</a></li>
+                        <li><a href="#" id="theme3">Darkly</a></li>
+                        <li><a href="#" id="theme4">Superhero</a></li>
+                    {{ end }}
                      {{/* 
                     {% if theme %}
                         {% if theme == "flatty" %}

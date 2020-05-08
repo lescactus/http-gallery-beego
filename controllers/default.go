@@ -26,6 +26,12 @@ var (
 
 	// Name of the type="file" html input
 	htmlInputName = "file"
+
+	// Name of the theme cookie
+	themeCookie = "theme"
+
+	// Name of the default theme
+	defaultTheme = "flatty"
 )
 
 type MainController struct {
@@ -61,14 +67,23 @@ func isContentTypeAllowed(contentType string) bool {
 	return false
 }
 
-// Return true if file is a real file and false if it is a directory
-func isAFile(file string) bool {
+// Return true if file is a real image and false if not
+func isAnImage(file string) bool {
 	i, err := os.Stat(file)
 	if os.IsNotExist(err) {
 		return false
 	}
 
-	return !i.IsDir()
+	if !i.IsDir() {
+		f, err := os.Open(file)
+		contentType, err := getFileContentType(f)
+		if err != nil {
+			return false
+		}
+
+		return isContentTypeAllowed(contentType)
+	}
+	return false
 }
 
 // Generate the thumbnail name from the original image
@@ -82,6 +97,15 @@ func generateThumbnailName(orig string) string {
 func (c *MainController) Get() {
 	beego.ReadFromRequest(&c.Controller)
 
+	// Get name of the current theme in a cookie.
+	// If empty, set the default theme
+	theme := ""
+	if c.Ctx.GetCookie(themeCookie) != "" {
+		theme = c.Ctx.GetCookie(themeCookie)
+	} else {
+		theme = defaultTheme
+	}
+
 	// Get all saved images and thumbnails
 	images := map[string]string{}
 	files, err := ioutil.ReadDir(uploadDirectory)
@@ -89,7 +113,7 @@ func (c *MainController) Get() {
 		logs.Critical("Error: " + err.Error())
 	}
 	for _, file := range files {
-		if isAFile(uploadDirectory + file.Name()) {
+		if isAnImage(uploadDirectory + file.Name()) {
 			images[file.Name()] = generateThumbnailName(file.Name())
 		}
 	}
@@ -99,6 +123,7 @@ func (c *MainController) Get() {
 	c.Data["images"] = images
 	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
 	c.Data["htmlInputName"] = htmlInputName
+	c.Data["theme"] = theme
 	c.TplName = "upload.tpl"
 }
 
