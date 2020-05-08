@@ -1,9 +1,8 @@
 FROM library/golang as builder
 
-RUN go get "github.com/astaxie/beego" "github.com/google/uuid" "github.com/disintegration/imaging"
-
 # Recompile the standard library without CGO
-RUN CGO_ENABLED=0 go install -a std
+RUN go get -v "github.com/astaxie/beego" "github.com/google/uuid" "github.com/disintegration/imaging" \
+  && CGO_ENABLED=0 go install -v -a std
 
 ENV APP_DIR $GOPATH/src/github.com/lescactus/http-gallery-beego
 RUN mkdir -p $APP_DIR
@@ -17,12 +16,15 @@ FROM alpine
 
 WORKDIR /app
 
-COPY --from=builder /go/src/github.com/lescactus/http-gallery-beego/main /app
-COPY --from=builder /go/src/github.com/lescactus/http-gallery-beego/views /app/views
-COPY --from=builder /go/src/github.com/lescactus/http-gallery-beego/static /app/static
+RUN chown -R 65534:65534 /app
+
+COPY --from=builder --chown=65534:65534 /go/src/github.com/lescactus/http-gallery-beego/main /app
+COPY --from=builder --chown=65534:65534 /go/src/github.com/lescactus/http-gallery-beego/views /app/views
+COPY --from=builder --chown=65534:65534 /go/src/github.com/lescactus/http-gallery-beego/static /app/static
 
 EXPOSE 8080
 
-RUN mkdir uploads thumbnails
+# nobody
+USER 65534
 
 CMD ["./main"]
