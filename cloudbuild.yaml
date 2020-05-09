@@ -16,6 +16,7 @@ steps:
     '--cache-from', 'eu.gcr.io/$PROJECT_ID/http-gallery-beego-builder:latest',
     '.'
   ]
+  id: 'builder'
 # Build the app image with the builder and previous image as cache
 - name: 'gcr.io/cloud-builders/docker'
   args: [
@@ -33,6 +34,8 @@ steps:
   args: ['push', 'eu.gcr.io/$PROJECT_ID/http-gallery-beego:latest']
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'eu.gcr.io/$PROJECT_ID/http-gallery-beego-builder:latest']
+  waitFor:
+    - 'builder'
 # Deploy image to Cloud Run
 - name: 'gcr.io/cloud-builders/gcloud'
   args:
