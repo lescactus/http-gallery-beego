@@ -153,8 +153,6 @@ func getBucketFiles() (map[string]string, error) {
 		}
 
 		images[filepath.Base(attrsUpload.Name)] = filepath.Base(attrsThumbnail.Name)
-		logs.Debug(attrsUpload.Name + " + " + attrsThumbnail.Name)
-
 	}
 
 	return images, err
