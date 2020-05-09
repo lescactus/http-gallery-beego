@@ -10,7 +10,6 @@ import (
 	"github.com/astaxie/beego/logs"
 
 	"github.com/astaxie/beego"
-	"github.com/lescactus/http-gallery-beego/models"
 	_ "github.com/lescactus/http-gallery-beego/routers"
 )
 
@@ -26,12 +25,6 @@ var (
 
 	// XSRFKeyPathEnvVariable is the path to a file containig the XSRFKey
 	XSRFKeyPathEnvVariable = "XSRF_KEY_PATH"
-
-	// StorageTypeEnvVariable is the name of the environment variable containing the storage type (local or GCP)
-	StorageTypeEnvVariable = "STORAGE_TYPE"
-
-	// GCPBucketNameEnvVariable is the name of the environment variable containing the name of the GCP bucket to store images to
-	GCPBucketNameEnvVariable = "BUCKET_NAME"
 )
 
 func generteRandomXSRFKey() string {
@@ -48,7 +41,7 @@ func generteRandomXSRFKey() string {
 	return string(b)
 }
 
-func main() {
+func init() {
 	// Define HTTPPort
 	if os.Getenv(HTTPPortEnvVariable) != "" {
 		var err error
@@ -91,26 +84,9 @@ func main() {
 		logs.Info("No " + XSRFExpireEnvVariable + " environment variable privided. Fallback to 0")
 		beego.BConfig.WebConfig.XSRFExpire = 0
 	}
+}
 
-	// Define if storage backend is local or GCP bucket. In case it's GCP, get the bucket name
-	if os.Getenv(StorageTypeEnvVariable) == "" {
-		logs.Info("No " + StorageTypeEnvVariable + " environment variable provided. Fallback to 'local'")
-		models.StorageType = "local"
-	} else if os.Getenv(StorageTypeEnvVariable) == "local" {
-		models.StorageType = "local"
-	} else if os.Getenv(StorageTypeEnvVariable) == "GCP" {
-		if os.Getenv(GCPBucketNameEnvVariable) != "" {
-			models.StorageType = "GCP"
-			models.BucketName = os.Getenv(GCPBucketNameEnvVariable)
-		} else {
-			logs.Error("When " + StorageTypeEnvVariable + " is set to GCP, " + GCPBucketNameEnvVariable + " must not be empty.")
-			os.Exit(1)
-		}
-
-	} else {
-		logs.Error(StorageTypeEnvVariable + " must either be 'local' or 'GCP'. Got " + os.Getenv(StorageTypeEnvVariable) + ". Fallback to 'local'")
-		models.StorageType = "local"
-	}
+func main() {
 
 	beego.Run()
 }

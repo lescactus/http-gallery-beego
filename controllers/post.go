@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"os"
+
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/logs"
 	"github.com/disintegration/imaging"
@@ -38,40 +40,66 @@ func (c *MainController) Post() {
 	}
 	logs.Info(c.Ctx.Input.GetData("requestid"), "New file Content-Type belongs to the allowed Content-Type")
 
-	// Save file in the local filesystem and create a new thumbnail out of it
-	if err := c.SaveToFile("file", models.UploadDirectory+fileName); err != nil {
-		errorHandler("Error while saving "+models.UploadDirectory+fileName+" on the local filesystem", c, err, flash)
-		return
+	imagePath := ""
+	thumbnailName := ""
+	thumbnailPath := ""
 
+	if models.StorageType == "local" {
+		imagePath = models.UploadDirectory + fileName
+		thumbnailName = generateThumbnailName(fileName)
+		thumbnailPath = models.ThumbnailsDirectory + thumbnailName
+	} else { // GCP bucket
+		imagePath = models.TmpDirectory + fileName
+		thumbnailName = generateThumbnailName(fileName)
+		thumbnailPath = models.TmpDirectory + thumbnailName
 	}
 
+	// Save file in the local filesystem and create a new thumbnail out of it
+	if err := c.SaveToFile("file", imagePath); err != nil {
+		errorHandler("Error while saving "+imagePath+" on the local filesystem", c, err, flash)
+		return
+	}
+	logs.Info(c.Ctx.Input.GetData("requestid"), "New file saved successfully: "+fileName)
+
 	// Create and save the thumbnail from the uploaded image
-	thumbnailName := generateThumbnailName(fileName)
-	thumbnail, err := imaging.Open(models.UploadDirectory + fileName)
+	thumbnail, err := imaging.Open(imagePath)
 	if err != nil {
 		errorHandler("Error while creating thumbnail for "+fileName, c, err, flash)
 		return
 	}
 
 	thumbnail = imaging.Fill(thumbnail, 300, 300, imaging.Center, imaging.Box)
-	err = imaging.Save(thumbnail, models.ThumbnailsDirectory+thumbnailName)
+	err = imaging.Save(thumbnail, thumbnailPath)
 	if err != nil {
 		errorHandler("Error while creating thumbnail for "+fileName, c, err, flash)
 		return
 	}
-
 	logs.Info(c.Ctx.Input.GetData("requestid"), "New file saved successfully: "+thumbnailName)
-	flash.Success("File successfully uploaded")
 
-	flash.Store(&c.Controller)
-	c.Redirect("/", 301)
-	return
-}
+	if models.StorageType == "local" {
+		flash.Success("File successfully uploaded")
 
-func errorHandler(msg string, c *MainController, err error, flash *beego.FlashData) {
-	logs.Error(c.Ctx.Input.GetData("requestid"), err.Error())
-	flash.Error(msg)
-	flash.Store(&c.Controller)
-	c.Redirect("/", 302)
-	return
+		flash.Store(&c.Controller)
+		c.Redirect("/", 301)
+		return
+	}
+
+	// Push image and thumbnail to Google Storage
+	if models.StorageType == "GCP" {
+		defer os.Remove(imagePath)
+		defer os.Remove(thumbnailPath)
+
+		if err := uploadGoogleStorage(imagePath, models.UploadDirectory+fileName); err != nil {
+			errorHandler("Error while saving "+fileName+" to Google Storage Bucket", c, err, flash)
+		}
+		if err := uploadGoogleStorage(thumbnailPath, models.ThumbnailsDirectory+thumbnailName); err != nil {
+			errorHandler("Error while saving "+thumbnailName+" to Google Storage Bucket", c, err, flash)
+		}
+
+		flash.Success("File successfully uploaded")
+
+		flash.Store(&c.Controller)
+		c.Redirect("/", 301)
+		return
+	}
 }

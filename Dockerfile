@@ -1,7 +1,7 @@
 FROM library/golang:1.14.2 as builder
 
 # Recompile the standard library without CGO
-RUN go get -v "github.com/astaxie/beego" "github.com/google/uuid" "github.com/disintegration/imaging" \
+RUN go get -v "github.com/astaxie/beego" "github.com/google/uuid" "github.com/disintegration/imaging" "cloud.google.com/go/storage" \
   && CGO_ENABLED=0 go install -v -a std
 
 ENV APP_DIR $GOPATH/src/github.com/lescactus/http-gallery-beego

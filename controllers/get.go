@@ -24,18 +24,32 @@ func (c *MainController) Get() {
 
 	// Get all saved images and thumbnails
 	images := map[string]string{}
-	files, err := ioutil.ReadDir(models.UploadDirectory)
-	if err != nil {
-		logs.Critical("Error: " + err.Error())
-	}
-	for _, file := range files {
-		if isAnImage(models.UploadDirectory + file.Name()) {
-			images[file.Name()] = generateThumbnailName(file.Name())
+	if models.StorageType == "local" {
+		files, err := ioutil.ReadDir(models.UploadDirectory)
+		if err != nil {
+			logs.Critical("Error: " + err.Error())
+		}
+		for _, file := range files {
+			if isAnImage(models.UploadDirectory + file.Name()) {
+				images[file.Name()] = generateThumbnailName(file.Name())
+			}
+		}
+	} else {
+		var err error
+		images, err = getBucketFiles()
+		if err != nil {
+			logs.Critical("Error: " + err.Error())
+			return
 		}
 	}
 
-	c.Data["uploadDirectory"] = models.UploadDirectory
-	c.Data["thumbnailDirectory"] = models.ThumbnailsDirectory
+	if models.StorageType == "local" {
+		c.Data["uploadDirectory"] = models.UploadDirectory
+		c.Data["thumbnailDirectory"] = models.ThumbnailsDirectory
+	} else {
+		c.Data["uploadDirectory"] = "https://storage.googleapis.com/" + models.BucketName + "/" + models.UploadDirectory
+		c.Data["thumbnailDirectory"] = "https://storage.googleapis.com/" + models.BucketName + "/" + models.ThumbnailsDirectory
+	}
 	c.Data["images"] = images
 	c.Data["xsrfdata"] = template.HTML(c.XSRFFormHTML())
 	c.Data["htmlInputName"] = htmlInputName
