@@ -39,4 +39,5 @@ steps:
   - '--max-instances'
   - '2'
 images:
-- eu.gcr.io/$PROJECT_ID/http-gallery-beego
+- eu.gcr.io/$PROJECT_ID/http-gallery-beego:$COMMIT_SHA
+- eu.gcr.io/$PROJECT_ID/http-gallery-beego:latest

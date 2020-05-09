@@ -20,8 +20,8 @@ WORKDIR /app
 RUN chown -R 65534:65534 /app
 
 COPY --from=builder --chown=65534:65534 /app/main /app
-COPY --from=builder --chown=65534:65534 /app/views /app/views
-COPY --from=builder --chown=65534:65534 /app/static /app/static
+COPY --chown=65534:65534 ./views /app/views
+COPY --chown=65534:65534 ./static /app/static
 
 EXPOSE 8080
 

@@ -1,1 +1,6 @@
 .git*
+README.md
+thumbnails/
+uploads/
+tmp/
+Dockerfile
