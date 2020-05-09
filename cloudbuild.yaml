@@ -10,12 +10,15 @@ steps:
   args: [
     'build',
     '-t', 'eu.gcr.io/$PROJECT_ID/http-gallery-beego:$COMMIT_SHA',
+    '-t', 'eu.gcr.io/$PROJECT_ID/http-gallery-beego:latest',
     '--cache-from', 'eu.gcr.io/$PROJECT_ID/http-gallery-beego:latest',
     '.'
   ]
 # Push the image to Container Registry
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'eu.gcr.io/$PROJECT_ID/http-gallery-beego:$COMMIT_SHA']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'eu.gcr.io/$PROJECT_ID/http-gallery-beego:latest']
 # Deploy image to Cloud Run
 - name: 'gcr.io/cloud-builders/gcloud'
   args:
