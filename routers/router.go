@@ -23,10 +23,14 @@ func createDirectoryIfNotPresent(dirPath string) {
 }
 
 func init() {
-	// If local filesystem is the chosen storage backend, create the upload and thumbnails directories if needed
+	// If local filesystem is the chosen storage backend:
+	// * create the upload and thumbnails directories if needed
+	// * set the uploads and thumbnails directory as a static path
 	if models.StorageType == "local" {
 		createDirectoryIfNotPresent(models.UploadDirectory)
 		createDirectoryIfNotPresent(models.ThumbnailsDirectory)
+		beego.SetStaticPath(models.UploadDirectory, models.UploadDirectory)
+		beego.SetStaticPath(models.ThumbnailsDirectory, models.ThumbnailsDirectory)
 	}
 
 	// If GCP bucket is the chosen storage backend, create a temporary directory if needed
@@ -34,11 +38,6 @@ func init() {
 		createDirectoryIfNotPresent(models.TmpDirectory)
 	}
 
-	// If local filesystem is the chosen storage backend, set the uploads and thumbnails directory as a static path
-	if models.StorageType == "local" {
-		beego.SetStaticPath(models.UploadDirectory, models.UploadDirectory)
-		beego.SetStaticPath(models.ThumbnailsDirectory, models.ThumbnailsDirectory)
-	}
 	beego.SetStaticPath("static/css", "static/css")
 	beego.SetStaticPath("static/img", "static/img")
 	beego.SetStaticPath("static/js", "static/js")
