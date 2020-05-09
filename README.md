@@ -106,7 +106,8 @@ docker run -d \
 ```
 
 ### Google Cloud Run
-If you plan to run this application with [Cloud Run](https://cloud.google.com/run), you must ensure your Cloud Run service account can also write to your Cloud Storage Bucket (the default is already granted these permissions).
+If you plan to run this application with [Cloud Run](https://cloud.google.com/run), you must ensure your Cloud Run service account can also write to your Cloud Storage Bucket. 
+Add the role **Storage Object Creator** to your service account (default service account name is `xxxxxxxxxx-compute@developer.gserviceaccount.com`)
 Simply add the `STORAGE_TYPE=GCP` and `BUCKET_NAME=my-bucket-name` environment variables.
 
 Screenshots
