@@ -1,4 +1,4 @@
-FROM library/golang as builder
+FROM library/golang:1.14.2 as builder
 
 # Recompile the standard library without CGO
 RUN go get -v "github.com/astaxie/beego" "github.com/google/uuid" "github.com/disintegration/imaging" \
@@ -12,7 +12,7 @@ ADD . $APP_DIR
 # Compile the binary and statically link
 RUN cd $APP_DIR && CGO_ENABLED=0 go build -ldflags '-d -w -s' -o main
 
-FROM alpine
+FROM alpine:3
 
 WORKDIR /app
 
