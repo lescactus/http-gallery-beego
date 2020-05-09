@@ -9,11 +9,7 @@ import (
 	"github.com/astaxie/beego/context"
 	"github.com/google/uuid"
 	"github.com/lescactus/http-gallery-beego/controllers"
-)
-
-var (
-	uploadDirectory     = "uploads/"
-	thumbnailsDirectory = "thumbnails/"
+	"github.com/lescactus/http-gallery-beego/models"
 )
 
 func createDirectoryIfNotPresent(dirPath string) {
@@ -27,11 +23,11 @@ func createDirectoryIfNotPresent(dirPath string) {
 }
 
 func init() {
-	createDirectoryIfNotPresent(uploadDirectory)
-	createDirectoryIfNotPresent(thumbnailsDirectory)
+	createDirectoryIfNotPresent(models.UploadDirectory)
+	createDirectoryIfNotPresent(models.ThumbnailsDirectory)
 
-	beego.SetStaticPath(uploadDirectory, uploadDirectory)
-	beego.SetStaticPath(thumbnailsDirectory, thumbnailsDirectory)
+	beego.SetStaticPath(models.UploadDirectory, models.UploadDirectory)
+	beego.SetStaticPath(models.ThumbnailsDirectory, models.ThumbnailsDirectory)
 	beego.SetStaticPath("static/css", "static/css")
 	beego.SetStaticPath("static/img", "static/img")
 	beego.SetStaticPath("static/js", "static/js")
