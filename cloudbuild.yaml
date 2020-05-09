@@ -1,10 +1,38 @@
 steps:
-# Build the container image
+# Pull the builder image & previous image to use them as caches images
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'eu.gcr.io/whoami-go-276012/http-gallery-beego:$COMMIT_SHA', '.']
-# Push the image to Container Registry
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    docker pull eu.gcr.io/$PROJECT_ID/http-gallery-beego-builder:latest &&
+    docker pull eu.gcr.io/$PROJECT_ID/http-gallery-beego:latest || exit 0
+# Build the builder image
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'eu.gcr.io/whoami-go-276012/http-gallery-beego:$COMMIT_SHA']
+  args: [
+    'build',
+    '-t', 'eu.gcr.io/$PROJECT_ID/http-gallery-beego-builder:latest', 
+    '--target', 'builder',
+    '--cache-from', 'eu.gcr.io/$PROJECT_ID/http-gallery-beego-builder:latest',
+    '.'
+  ]
+# Build the app image with the builder and previous image as cache
+- name: 'gcr.io/cloud-builders/docker'
+  args: [
+    'build',
+    '-t', 'eu.gcr.io/$PROJECT_ID/http-gallery-beego:$COMMIT_SHA',
+    '-t', 'eu.gcr.io/$PROJECT_ID/http-gallery-beego:latest',
+    '--cache-from', 'eu.gcr.io/$PROJECT_ID/http-gallery-beego-builder:latest',
+    '--cache-from', 'docker pull eu.gcr.io/$PROJECT_ID/http-gallery-beego:latest',
+    '.'
+  ]
+# Push the images to Container Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'eu.gcr.io/$PROJECT_ID/http-gallery-beego:$COMMIT_SHA']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'eu.gcr.io/$PROJECT_ID/http-gallery-beego:latest']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'eu.gcr.io/$PROJECT_ID/http-gallery-beego-builder:latest']
 # Deploy image to Cloud Run
 - name: 'gcr.io/cloud-builders/gcloud'
   args:
@@ -12,7 +40,7 @@ steps:
   - 'deploy'
   - 'http-gallery-beego'
   - '--image'
-  - 'eu.gcr.io/whoami-go-276012/http-gallery-beego:$COMMIT_SHA'
+  - 'eu.gcr.io/$PROJECT_ID/http-gallery-beego:$COMMIT_SHA'
   - '--region'
   - 'europe-west1'
   - '--platform'
@@ -22,5 +50,9 @@ steps:
   - '1'
   - '--memory'
   - '128Mi'
+  - '--max-instances'
+  - '2'
 images:
-- eu.gcr.io/whoami-go-276012/http-gallery-beego
+- eu.gcr.io/$PROJECT_ID/http-gallery-beego:$COMMIT_SHA
+- eu.gcr.io/$PROJECT_ID/http-gallery-beego:latest
+- eu.gcr.io/$PROJECT_ID/http-gallery-beego-builder:latest

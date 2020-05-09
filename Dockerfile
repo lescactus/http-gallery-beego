@@ -1,16 +1,17 @@
-FROM library/golang:1.14.2 as builder
+FROM library/golang:1.14.2-alpine as builder
 
-# Recompile the standard library without CGO
-RUN go get -v "github.com/astaxie/beego" "github.com/google/uuid" "github.com/disintegration/imaging" "cloud.google.com/go/storage" \
-  && CGO_ENABLED=0 go install -v -a std
+ENV GO111MODULE=on
 
-ENV APP_DIR $GOPATH/src/github.com/lescactus/http-gallery-beego
-RUN mkdir -p $APP_DIR
+WORKDIR /app
 
-ADD . $APP_DIR
+COPY go.* ./
 
-# Compile the binary and statically link
-RUN cd $APP_DIR && CGO_ENABLED=0 go build -ldflags '-d -w -s' -o main
+RUN go mod download
+
+COPY . .
+
+RUN CGO_ENABLED=0 go build -ldflags '-d -w -s' -o main
+
 
 FROM alpine:3
 
@@ -18,9 +19,9 @@ WORKDIR /app
 
 RUN chown -R 65534:65534 /app
 
-COPY --from=builder --chown=65534:65534 /go/src/github.com/lescactus/http-gallery-beego/main /app
-COPY --from=builder --chown=65534:65534 /go/src/github.com/lescactus/http-gallery-beego/views /app/views
-COPY --from=builder --chown=65534:65534 /go/src/github.com/lescactus/http-gallery-beego/static /app/static
+COPY --from=builder --chown=65534:65534 /app/main /app
+COPY --chown=65534:65534 ./views /app/views
+COPY --chown=65534:65534 ./static /app/static
 
 EXPOSE 8080
 
