@@ -1,4 +1,5 @@
-HTTP Gallery
+HTTP Gallery  
+[![cloud_build_status](https://storage.googleapis.com/gcp-build-badge/http-gallery-beego/statusbadge.svg)](https://github.com/lescactus/http-gallery-beego)
 ==================
 
 A Beego web app that allow users to upload local images that are displayed in a html gallery and carousel. This is the rewriting in Go of one of my previous mini web project: **[http_gallery](https://github.com/lescactus/http_gallery)**.
