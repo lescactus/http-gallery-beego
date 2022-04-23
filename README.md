@@ -4,7 +4,7 @@ HTTP Gallery
 
 A Beego web app that allow users to upload local images that are displayed in a html gallery and carousel. This is the rewriting in Go of one of my previous mini web project: **[http_gallery](https://github.com/lescactus/http_gallery)**.
 
-**gallery**: [gallery-beego.alexasr.tk][1]
+**gallery**: [gallery-beego.alexasr.fr][1]
 
 It uses:
 
@@ -23,7 +23,7 @@ Use it now
 $ go get github.com/lescactus/http-gallery-beego
 
 # Run the webserver
-$ http-gallery-beego
+$ ~/go/bin/http-gallery-beego
 2020/05/09 15:17:31.081 [I]  No STORAGE_TYPE environment variable provided. Fallback to 'local'
 2020/05/09 15:17:31.081 [I]  Directory uploads/ is not present. Creating it...
 2020/05/09 15:17:31.081 [I]  Directory thumbnails/ is not present. Creating it...
@@ -131,7 +131,7 @@ Screenshots
 
 
 
-[1]: https://gallery-beego.alexasr.tk/
+[1]: https://gallery-beego.alexasr.fr/
 [2]: https://golang.org/
 [3]: https://beego.me/
 [4]: https://getbootstrap.com/
