@@ -10,6 +10,7 @@ require (
 	github.com/golang/protobuf v1.4.1 // indirect
 	github.com/google/uuid v1.1.1
 	github.com/shiena/ansicolor v0.0.0-20151119151921-a422bbe96644 // indirect
+	github.com/smartystreets/goconvey v1.7.2
 	golang.org/x/crypto v0.0.0-20200429183012-4b2356b1ed79 // indirect
 	golang.org/x/image v0.0.0-20200430140353-33d19683fad8 // indirect
 	golang.org/x/net v0.0.0-20200506145744-7e3656a0809f // indirect
