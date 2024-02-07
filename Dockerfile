@@ -1,6 +1,4 @@
-FROM library/golang:1.14.2-alpine as builder
-
-ENV GO111MODULE=on
+FROM golang:1.14 as builder
 
 WORKDIR /app
 
@@ -12,20 +10,15 @@ COPY . .
 
 RUN CGO_ENABLED=0 go build -ldflags '-d -w -s' -o main
 
-
-FROM alpine:3
+FROM scratch
 
 WORKDIR /app
 
-RUN chown -R 65534:65534 /app
-
+COPY --from=builder /app/main /
 COPY --from=builder --chown=65534:65534 /app/main /app
 COPY --chown=65534:65534 ./views /app/views
 COPY --chown=65534:65534 ./static /app/static
 
 EXPOSE 8080
 
-# nobody
-USER 65534
-
-CMD ["./main"]
+CMD ["/app/main"]
