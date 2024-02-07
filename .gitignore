@@ -1,2 +1,4 @@
 ./http-gallery-beego* # output binary
 uploads/*
+main
+http-gallery-beego
