@@ -18,6 +18,7 @@ COPY --from=builder /app/main /
 COPY --from=builder --chown=65534:65534 /app/main /app
 COPY --chown=65534:65534 ./views /app/views
 COPY --chown=65534:65534 ./static /app/static
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
 EXPOSE 8080
 
