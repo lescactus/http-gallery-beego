@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"html/template"
-	"io/ioutil"
+	"os"
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/logs"
@@ -25,12 +25,12 @@ func (c *MainController) Get() {
 	// Get all saved images and thumbnails
 	images := map[string]string{}
 	if models.StorageType == "local" {
-		files, err := ioutil.ReadDir(models.UploadDirectory)
+		files, err := os.ReadDir(models.UploadDirectory)
 		if err != nil {
 			logs.Critical("Error: " + err.Error())
 		}
 		for _, file := range files {
-			if isAnImage(models.UploadDirectory + file.Name()) {
+			if isAnImage(file) {
 				images[file.Name()] = generateThumbnailName(file.Name())
 			}
 		}
