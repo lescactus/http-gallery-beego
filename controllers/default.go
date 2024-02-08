@@ -52,13 +52,12 @@ func isContentTypeAllowed(contentType string) bool {
 }
 
 // Return true if file is a real image and false if not
-func isAnImage(f fs.DirEntry) bool {
-	if !f.IsDir() {
-		f, err := os.Open(f.Name())
+func isAnImage(d fs.DirEntry) bool {
+	if !d.IsDir() {
+		f, err := os.Open(d.Name())
 		if err != nil {
 			return false
 		}
-
 		contentType, err := getFileContentType(f)
 		if err != nil {
 			return false
