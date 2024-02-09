@@ -54,7 +54,7 @@ func isContentTypeAllowed(contentType string) bool {
 // Return true if file is a real image and false if not
 func isAnImage(d fs.DirEntry) bool {
 	if !d.IsDir() {
-		f, err := os.Open(d.Name())
+		f, err := os.Open(models.UploadDirectory + d.Name())
 		if err != nil {
 			return false
 		}
