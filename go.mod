@@ -31,16 +31,15 @@ require (
 	github.com/shiena/ansicolor v0.0.0-20151119151921-a422bbe96644 // indirect
 	github.com/smartystreets/assertions v1.2.0 // indirect
 	go.opencensus.io v0.22.3 // indirect
-	golang.org/x/crypto v0.0.0-20200429183012-4b2356b1ed79 // indirect
+	golang.org/x/crypto v0.14.0 // indirect
 	golang.org/x/image v0.0.0-20200430140353-33d19683fad8 // indirect
 	golang.org/x/lint v0.0.0-20200302205851-738671d3881b // indirect
-	golang.org/x/mod v0.2.0 // indirect
-	golang.org/x/net v0.0.0-20200506145744-7e3656a0809f // indirect
+	golang.org/x/mod v0.8.0 // indirect
+	golang.org/x/net v0.17.0 // indirect
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d // indirect
 	golang.org/x/sys v0.17.0 // indirect
-	golang.org/x/text v0.3.2 // indirect
-	golang.org/x/tools v0.0.0-20200509030707-2212a7e161a5 // indirect
-	golang.org/x/xerrors v0.0.0-20191204190536-9bdfabe68543 // indirect
+	golang.org/x/text v0.13.0 // indirect
+	golang.org/x/tools v0.6.0 // indirect
 	google.golang.org/appengine v1.6.6 // indirect
 	google.golang.org/genproto v0.0.0-20200507105951-43844f6eee31 // indirect
 	google.golang.org/grpc v1.29.1 // indirect
