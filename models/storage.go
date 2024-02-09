@@ -65,7 +65,7 @@ func bucketExists(b string) error {
 	ctx, cancel := context.WithTimeout(ctx, time.Second*50)
 	defer cancel()
 
-	client, err := storage.NewClient((ctx))
+	client, err := storage.NewClient(ctx)
 	if err != nil {
 		return err
 	}

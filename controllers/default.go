@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"io/fs"
 	"mime/multipart"
 	"net/http"
 	"os"
@@ -51,14 +52,12 @@ func isContentTypeAllowed(contentType string) bool {
 }
 
 // Return true if file is a real image and false if not
-func isAnImage(file string) bool {
-	i, err := os.Stat(file)
-	if os.IsNotExist(err) {
-		return false
-	}
-
-	if !i.IsDir() {
-		f, err := os.Open(file)
+func isAnImage(d fs.DirEntry) bool {
+	if !d.IsDir() {
+		f, err := os.Open(models.UploadDirectory + d.Name())
+		if err != nil {
+			return false
+		}
 		contentType, err := getFileContentType(f)
 		if err != nil {
 			return false
@@ -81,7 +80,6 @@ func errorHandler(msg string, c *MainController, err error, flash *beego.FlashDa
 	flash.Error(msg)
 	flash.Store(&c.Controller)
 	c.Redirect("/", 302)
-	return
 }
 
 // Upload source into a Google Storage bucket
@@ -97,7 +95,7 @@ func uploadGoogleStorage(source, destination string) error {
 	ctx, cancel := context.WithTimeout(ctx, time.Second*50)
 	defer cancel()
 
-	client, err := storage.NewClient((ctx))
+	client, err := storage.NewClient(ctx)
 	if err != nil {
 		return fmt.Errorf("Failed to create a Google Cloud Storage NewClient(): " + err.Error())
 	}

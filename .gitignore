@@ -1,3 +1,4 @@
+.vscode/
 http-gallery-beego
 uploads/*
 thumbnails/*
