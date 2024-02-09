@@ -1,7 +1,6 @@
 package main
 
 import (
-	"io/ioutil"
 	"math/rand"
 	"os"
 	"strconv"
@@ -58,7 +57,7 @@ func init() {
 	// Check if XSRFKeyPathEnvVariable is set, if yes, read the XSRFKey from this file, otherwise,
 	// read it from XSRFKeyEnvVariable if set, otherwise generate it randomly
 	if os.Getenv(XSRFKeyPathEnvVariable) != "" {
-		XSRFKey, err := ioutil.ReadFile(os.Getenv(XSRFKeyPathEnvVariable))
+		XSRFKey, err := os.ReadFile(os.Getenv(XSRFKeyPathEnvVariable))
 		if err != nil {
 			logs.Critical("Error: " + XSRFKeyPathEnvVariable + " can't be read: " + err.Error())
 			os.Exit(1)
