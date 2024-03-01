@@ -8,7 +8,7 @@ require (
 	github.com/disintegration/imaging v1.6.2
 	github.com/google/uuid v1.6.0
 	github.com/smartystreets/goconvey v1.8.1
-	google.golang.org/api v0.166.0
+	google.golang.org/api v0.167.0
 )
 
 require (
