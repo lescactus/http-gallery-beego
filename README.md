@@ -6,7 +6,7 @@
 
 A Beego web app that allow users to upload local images that are displayed in a html gallery and carousel. This is the rewriting in Go of one of my previous mini web project: **[http_gallery](https://github.com/lescactus/http_gallery)**.
 
-**gallery**: [gallery-beego.alexasr.fr][1]
+**gallery**: [gallery.alexasr.fr][1]
 
 It uses:
 
@@ -203,7 +203,7 @@ Screenshots
 
 
 
-[1]: https://gallery-beego.alexasr.fr/
+[1]: https://gallery.alexasr.fr/
 [2]: https://golang.org/
 [3]: https://beego.me/
 [4]: https://getbootstrap.com/
