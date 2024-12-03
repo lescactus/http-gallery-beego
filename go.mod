@@ -5,7 +5,7 @@ go 1.21
 toolchain go1.22.2
 
 require (
-	cloud.google.com/go/storage v1.46.0
+	cloud.google.com/go/storage v1.47.0
 	github.com/astaxie/beego v1.12.3
 	github.com/disintegration/imaging v1.6.2
 	github.com/google/uuid v1.6.0
