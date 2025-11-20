@@ -77,7 +77,7 @@ func generateThumbnailName(orig string) string {
 
 func errorHandler(msg string, c *MainController, err error, flash *beego.FlashData) {
 	logs.Error(c.Ctx.Input.GetData("requestid"), err.Error())
-	flash.Error(msg)
+	flash.Error("%s", msg)
 	flash.Store(&c.Controller)
 	c.Redirect("/", 302)
 }
@@ -88,7 +88,7 @@ func uploadGoogleStorage(source, destination string) error {
 
 	file, err := os.Open(source)
 	if err != nil {
-		return fmt.Errorf("Failed to open file: " + err.Error())
+		return fmt.Errorf("%s", "Failed to open file: "+err.Error())
 	}
 	defer file.Close()
 
@@ -97,16 +97,16 @@ func uploadGoogleStorage(source, destination string) error {
 
 	client, err := storage.NewClient(ctx)
 	if err != nil {
-		return fmt.Errorf("Failed to create a Google Cloud Storage NewClient(): " + err.Error())
+		return fmt.Errorf("%s", "Failed to create a Google Cloud Storage NewClient(): "+err.Error())
 	}
 
 	// Write object in the bucket
 	writer := client.Bucket(models.BucketName).Object(destination).NewWriter(ctx)
 	if _, err = io.Copy(writer, file); err != nil {
-		return fmt.Errorf("Failed to write to bucket: " + err.Error())
+		return fmt.Errorf("%s", "Failed to write to bucket: "+err.Error())
 	}
 	if err := writer.Close(); err != nil {
-		return fmt.Errorf("Failed to close writer: " + err.Error())
+		return fmt.Errorf("%s", "Failed to close writer: "+err.Error())
 	}
 
 	return nil

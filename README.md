@@ -2,7 +2,7 @@
 
 [![cloud_build_status](https://storage.googleapis.com/gcp-build-badge/http-gallery-beego/statusbadge.svg)](https://github.com/lescactus/http-gallery-beego) [![Go build and test](https://github.com/lescactus/http-gallery-beego/actions/workflows/go.yaml/badge.svg)](https://github.com/lescactus/http-gallery-beego/actions/workflows/go.yaml)
 
-![go](https://img.shields.io/badge/go->=1.23-blue)
+![go](https://img.shields.io/badge/go->=1.24-blue)
 
 A Beego web app that allow users to upload local images that are displayed in a html gallery and carousel. This is the rewriting in Go of one of my previous mini web project: **[http_gallery](https://github.com/lescactus/http_gallery)**.
 
@@ -19,7 +19,7 @@ It uses:
 
 ## Requirements
 
-* Golang 1.23 or higher
+* Golang 1.24 or higher
 
 ## Getting started
 
@@ -90,7 +90,7 @@ If you don't have [go](https://golang.org/doc/install) installed but have docker
 ```bash
 # Build from sources inside a docker container. Use the '-o' flag to change the compiled binary name
 # Warning: the compiled binary belongs to root:root
-docker run --rm -it -v "$PWD":/app -w /app golang:1.23 go build -buildvcs=false
+docker run --rm -it -v "$PWD":/app -w /app golang:1.24 go build -buildvcs=false
 
 # Default compiled binary is http-gallery-beego
 # You can optionnaly move it somewhere in your $PATH to access it shell wide
