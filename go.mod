@@ -3,7 +3,7 @@ module github.com/lescactus/http-gallery-beego
 go 1.25.0
 
 require (
-	cloud.google.com/go/storage v1.62.1
+	cloud.google.com/go/storage v1.62.2
 	github.com/astaxie/beego v1.12.3
 	github.com/disintegration/imaging v1.6.2
 	github.com/google/uuid v1.6.0
